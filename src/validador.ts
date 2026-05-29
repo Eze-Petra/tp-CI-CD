@@ -4,7 +4,7 @@ export function validarDni(dni: string): boolean {
     // Eliminar espacios y caracteres no numéricos
     const dniLimpio = dni.trim().replace(/[-.]/g, '');
     // Validar que el DNI tenga exactamente 8 dígitos con expresión regular
-    const expresionDni = /^\d{8}$/;
+    const expresionDni = /^\d{10}$/;
     // Retornar true si el DNI es válido, false en caso contrario
     return expresionDni.test(dniLimpio);
 }
