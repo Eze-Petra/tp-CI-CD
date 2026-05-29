@@ -1,3 +1,4 @@
+[![demo CI](https://github.com/Eze-Petra/tp-CI-CD/actions/workflows/node.js.yml/badge.svg)](https://github.com/Eze-Petra/tp-CI-CD/actions/workflows/node.js.yml)
 # tp-CI-CD
 
 Proyecto de ejemplo para la materia de Ingenieria y Calidad de Software de la UTN. El objetivo es mostrar una base simple para practicar integracion continua con TypeScript y Jest.
