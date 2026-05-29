@@ -14,3 +14,5 @@ jobs:
     steps:
     - name: 'Hello worl :)'
       run: echo "Hello world"
+    - name: 'Cual es la fecha?'
+      run: date
