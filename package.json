@@ -1,0 +1,33 @@
+{
+  "name": "tp-ci-cd",
+  "version": "1.0.0",
+  "description": "TP de Integración Continua - UTN FRRe",
+  "main": "dist/validador.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+    },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eze-Petra/tp-CI-CD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Eze-Petra/tp-CI-CD/issues"
+  },
+  "homepage": "https://github.com/Eze-Petra/tp-CI-CD#readme",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.1",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3"
+  }
+}
