@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
-    - name: 'Hello world'
-      run: echo "Hello world"
-    - name: 'Cual es la fecha?'
-      run: date
+    - uses: actions/setup-node@v6
+      with:
+          node-version: 24
+    - run: nmp ci --legacy-peer-deps
+    - run: npm run build
