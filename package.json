@@ -5,12 +5,13 @@
   "main": "dist/validador.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "bundle": "esbuild src/validador.ts --bundle --platform=browser --outfile=dist/validador.bundle.js --global-name=Validador"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Eze-Petra/tp-CI-CD.git"
@@ -28,6 +29,7 @@
     "@types/node": "^25.9.1",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "esbuild": "^0.17.19"
   }
 }
