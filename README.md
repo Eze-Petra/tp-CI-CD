@@ -78,5 +78,5 @@ Archivo: `.github/workflows/node.js.yml`
 	- `npm run test`
 	- `npm run build`
 
-Esto significa que cada push a `main` (o PR hacia `main`) ejecutará las pruebas automáticamente y construirá el proyecto. Si querés añadir un badge de estado, podés crear uno desde la página de GitHub Actions del repositorio y pegarlo aquí.
+Esto significa que cada push a `main` (o PR hacia `main`) ejecutará las pruebas automáticamente y construirá el proyecto.
 - definir una estrategia de despliegue o una version de demostracion

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Datos - TP IC/CD</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: white; width: 100%; max-width: 450px; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { color: #1e293b; margin-bottom: 8px; text-align: center; font-size: 24px; }
+        .subtitle { color: #64748b; text-align: center; font-size: 14px; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: #475569; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s; color: #334155; }
+        input:focus { outline: none; border-color: #3b82f6; }
+        
+        button { width: 100%; background-color: #3b82f6; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; margin-top: 10px; }
+        button:hover { background-color: #2563eb; }
+        
+        .results-box { margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: none; }
+        .result-item { padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; display: flex; align-items: center; font-weight: 500; }
+        .success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .icon { font-size: 18px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Validador del Sistema</h2>
+    <p class="subtitle">Trabajo Práctico de Integración y Entrega Continua</p>
+    
+    <div class="form-group">
+        <label for="dniInput">Documento Nacional de Identidad (DNI)</label>
+        <input type="text" id="dniInput" placeholder="Ej: 45.123.456 o 45123456">
+    </div>
+    
+    <div class="form-group">
+        <label for="passwordInput">Contraseña de Seguridad</label>
+        <input type="password" id="passwordInput" placeholder="Mínimo 8 caracteres, número y Mayúscula">
+    </div>
+    
+    <div class="form-group">
+        <label for="emailInput">Correo Electrónico</label>
+        <input type="email" id="emailInput" placeholder="usuario@correo.com">
+    </div>
+    
+    <button id="btnValidar">Validar Formulario</button>
+    
+    <div class="results-box" id="resultsBox">
+        <div id="dniResult"></div>
+        <div id="passwordResult"></div>
+        <div id="emailResult"></div>
+    </div>
+</div>
+
+<script src="dist/validador.bundle.js"></script>
+
+    <script>
+        // Enganchamos los elementos del HTML
+        const dniInput = document.getElementById('dniInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const emailInput = document.getElementById('emailInput');
+        const btnValidar = document.getElementById('btnValidar');
+        const resultsBox = document.getElementById('resultsBox');
+        
+        const dniResult = document.getElementById('dniResult');
+        const passwordResult = document.getElementById('passwordResult');
+        const emailResult = document.getElementById('emailResult');
+
+        // Función auxiliar para dibujar los carteles de éxito o error
+        function mostrarResultado(elemento, esValido, mensajeExito, mensajeError) {
+            if (esValido) {
+                elemento.className = 'result-item success';
+                elemento.innerHTML = `<span class="icon">✅</span> ${mensajeExito}`;
+            } else {
+                elemento.className = 'result-item error';
+                elemento.innerHTML = `<span class="icon">❌</span> ${mensajeError}`;
+            }
+        }
+
+        // Escuchamos el clic del botón
+        btnValidar.addEventListener('click', () => {
+            // Mostramos la cajita de resultados
+            resultsBox.style.display = 'block';
+
+            // Como esbuild exporta todo bajo el nombre 'Validador', llamamos a las funciones desde ahí
+            // NOTA: Asegurate de que en tu validador.ts las funciones tengan la palabra 'export' adelante.
+            
+            // 1. Validar DNI
+            const dniValido = Validador.validarDni(dniInput.value);
+            mostrarResultado(dniResult, dniValido, 'DNI correcto.', 'DNI inválido (debe tener 8 dígitos numéricos).');
+
+            // 2. Validar Contraseña
+            const passwordValida = Validador.validarContrasena(passwordInput.value);
+            mostrarResultado(passwordResult, passwordValida, 'Contraseña segura.', 'Contraseña débil (mínimo 8 caracteres, una mayúscula y un número).');
+
+            // 3. Validar Email
+            const emailValido = Validador.validarEmail(emailInput.value);
+            mostrarResultado(emailResult, emailValido, 'Correo electrónico válido.', 'Correo inválido (ej: usuario@correo.com).');
+        });
+    </script>
+</body>
+</html>
