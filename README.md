@@ -61,4 +61,22 @@ Este proyecto sirve como base para una pipeline de integracion continua porque p
 ## Proximos pasos
 
 - agregar un workflow YAML para ejecutar `npm install` y `npm test`
+- El workflow ya agregado: `.github/workflows/node.js.yml` (ver abajo)
+- Descripción del workflow: ejecuta `npm ci --legacy-peer-deps`, `npm run test` y `npm run build` en Node 20 sobre `ubuntu-latest`. Se activa en `push` y `pull_request` hacia `main`.
+
+### Workflow de GitHub Actions
+
+Archivo: `.github/workflows/node.js.yml`
+
+- Nombre: `demo CI`
+- Disparadores: `push` y `pull_request` sobre la rama `main`
+- Versión de Node: `20`
+- Pasos principales:
+	- `actions/checkout@v6`
+	- `actions/setup-node@v6` (cache: npm)
+	- `npm ci --legacy-peer-deps`
+	- `npm run test`
+	- `npm run build`
+
+Esto significa que cada push a `main` (o PR hacia `main`) ejecutará las pruebas automáticamente y construirá el proyecto. Si querés añadir un badge de estado, podés crear uno desde la página de GitHub Actions del repositorio y pegarlo aquí.
 - definir una estrategia de despliegue o una version de demostracion
