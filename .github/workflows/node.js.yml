@@ -30,6 +30,12 @@ jobs:
           cache: "npm"
     - run: npm ci --legacy-peer-deps
     - run: npm run test
+    - name: Notificar fallo a Discord
+      if: failure()
+      run: |
+        curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
 
 
   build:
@@ -44,6 +50,12 @@ jobs:
     - run: npm ci --legacy-peer-deps
     - run: npm run bundle
     - run: npm run build
+    - name: Notificar fallo a Discord
+      if: failure()
+      run: |
+        curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
 
 
   deploy:
@@ -56,9 +68,16 @@ jobs:
       run: npx vercel --prod --yes --name=tp-ci-cd --token=${{ secrets.VERCEL_TOKEN }}
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    - name: Notificar fallo a Discord
+      if: failure()
+      run: |
+        curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
     
-  feedback:
+    
+  complete:
     needs: [deploy, build, tests]
     if: always() # Siempre se ejecuta, sin importar el resultado de los trabajos anteriores 
     runs-on: ubuntu-latest
@@ -69,10 +88,3 @@ jobs:
         curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
         -H "Content-Type: application/json" \
         -d '{"content": "✅ Pipeline exitosa! Los tests pasaron y el deploy se realizó correctamente."}'
-
-    - name: Notificar fallo a Discord
-      if: needs.tests.result != 'success' || needs.build.result != 'success' || needs.deploy.result != 'success'
-      run: |
-        curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
-          -H "Content-Type: application/json" \
-          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
