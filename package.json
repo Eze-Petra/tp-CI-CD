@@ -1,6 +1,6 @@
 {
   "name": "tp-ci-cd",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "TP de Integración Continua - UTN FRRe",
   "main": "dist/validador.js",
   "scripts": {
