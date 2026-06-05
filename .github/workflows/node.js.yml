@@ -10,15 +10,11 @@ on:
     branches: [ "main" ]
     types: [opened, synchronize]
 
-jobs:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
-  avoid_reduncy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancelacion de Builds 
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{github.token}}
+jobs:
   
   tests:
     needs: avoid_reduncy
@@ -40,7 +36,7 @@ jobs:
 
 
   build:
-    needs: [tests, avoid_reduncy]
+    needs: [tests]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -60,7 +56,7 @@ jobs:
 
 
   deploy:
-    needs: [build, avoid_reduncy]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -79,7 +75,7 @@ jobs:
     
     
   complete:
-    needs: [deploy, build, tests, avoid_reduncy]
+    needs: [deploy, build, tests]
     if: always() # Siempre se ejecuta, sin importar el resultado de los trabajos anteriores 
     runs-on: ubuntu-latest
     steps: 
