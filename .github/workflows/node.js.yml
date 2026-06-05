@@ -35,7 +35,7 @@ jobs:
       run: |
         curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
           -H "Content-Type: application/json" \
-          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
 
 
   build:
@@ -55,7 +55,7 @@ jobs:
       run: |
         curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
           -H "Content-Type: application/json" \
-          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal con la build.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
 
 
   deploy:
@@ -74,7 +74,7 @@ jobs:
       run: |
         curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
           -H "Content-Type: application/json" \
-          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal en los tests o el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+          -d "{\"content\": \"❌ Pipeline fallida! Algo salió mal con el deploy.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
     
     
   complete:
