@@ -10,20 +10,19 @@ on:
     branches: [ "main" ]
     types: [opened, synchronize]
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true 
-
 jobs:
-  hello-world:
 
+  avoid_reduncy:
     runs-on: ubuntu-latest
     steps:
-    - name: Cancelacion de Builds 
-      uses: styfle/cancel-workflow-action@0.9.1
-      with:
-        access_token: ${{github.token}}
-        
+      - name: Cancelacion de Builds 
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{github.token}}
+  
+  tests:
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-node@v6
       with:
@@ -31,9 +30,27 @@ jobs:
           cache: "npm"
     - run: npm ci --legacy-peer-deps
     - run: npm run test
+
+
+  build:
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+          node-version: 20
+          cache: "npm"
+    - run: npm ci --legacy-peer-deps
     - run: npm run bundle
     - run: npm run build
 
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
     - name: Deploy a Vercel
       if: ${{github.event_name == 'push'}}
       run: npx vercel --prod --yes --name=tp-ci-cd --token=${{ secrets.VERCEL_TOKEN }}
@@ -41,15 +58,20 @@ jobs:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
     
+  feedback:
+    needs: [deploy, build, tests]
+    if: always() # Siempre se ejecuta, sin importar el resultado de los trabajos anteriores 
+    runs-on: ubuntu-latest
+    steps: 
     - name: Notificar éxito a Discord
-      if: success()
+      if: needs.tests.result == 'success' && needs.build.result == 'success' && needs.deploy.result == 'success'
       run: |
         curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
         -H "Content-Type: application/json" \
         -d '{"content": "✅ Pipeline exitosa! Los tests pasaron y el deploy se realizó correctamente."}'
 
     - name: Notificar fallo a Discord
-      if: failure()
+      if: needs.tests.result != 'success' || needs.build.result != 'success' || needs.deploy.result != 'success'
       run: |
         curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
           -H "Content-Type: application/json" \
