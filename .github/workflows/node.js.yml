@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: [ "main" ]
     types: [opened, synchronize]
-
+    
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -17,7 +17,6 @@ concurrency:
 jobs:
   
   tests:
-    needs: avoid_reduncy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
