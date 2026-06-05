@@ -21,6 +21,7 @@ jobs:
           access_token: ${{github.token}}
   
   tests:
+    needs: avoid_reduncy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -39,7 +40,7 @@ jobs:
 
 
   build:
-    needs: [tests]
+    needs: [tests, avoid_reduncy]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -59,7 +60,7 @@ jobs:
 
 
   deploy:
-    needs: [build]
+    needs: [build, avoid_reduncy]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -78,12 +79,12 @@ jobs:
     
     
   complete:
-    needs: [deploy, build, tests]
+    needs: [deploy, build, tests, avoid_reduncy]
     if: always() # Siempre se ejecuta, sin importar el resultado de los trabajos anteriores 
     runs-on: ubuntu-latest
     steps: 
     - name: Notificar éxito a Discord
-      if: needs.tests.result == 'success' && needs.build.result == 'success' && needs.deploy.result == 'success'
+      if: needs.tests.result == 'success' && needs.build.result == 'success' && needs.deploy.result == 'success' && needs.build.result != 'skipped' && needs.deploy.result != 'skipped' && needs.tests.result != 'skipped'
       run: |
         curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
         -H "Content-Type: application/json" \
