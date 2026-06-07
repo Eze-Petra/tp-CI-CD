@@ -16,7 +16,25 @@ concurrency:
 
 jobs:
   
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+          node-version: 20
+          cache: "npm"
+    - run: npm ci --legacy-peer-deps
+    - run: npm run lint
+    - name: Notificar fallo a Discord
+      if: failure()
+      run: |
+        curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"content\": \"❌ Pipeline fallida! El código no pasó el análisis del Linter.\\nRepo: ${{ github.repository }}\\nRef: ${{ github.ref }}\\nCommit: ${{ github.event.head_commit.message }}\\nRun: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+
   tests:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -74,7 +92,7 @@ jobs:
     
     
   complete:
-    needs: [deploy, build, tests]
+    needs: [deploy, build, tests, lint]
     if: always() # Siempre se ejecuta, sin importar el resultado de los trabajos anteriores 
     runs-on: ubuntu-latest
     steps: 
