@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - name: Notificar éxito a Discord
-      if: needs.tests.result == 'success' && needs.build.result == 'success' && needs.deploy.result == 'success' && needs.build.result != 'skipped' && needs.deploy.result != 'skipped' && needs.tests.result != 'skipped'
+      if: needs.tests.result == 'success' && needs.build.result == 'success' && needs.deploy.result == 'success' && needs.build.result != 'skipped' && needs.deploy.result != 'skipped' && needs.tests.result != 'skipped' && needs.lint.result == 'success' && needs.lint.result != 'skipped'
       run: |
         curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
         -H "Content-Type: application/json" \
