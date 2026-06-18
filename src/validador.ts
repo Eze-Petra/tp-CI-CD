@@ -1,4 +1,5 @@
 // funciones que vamos a usar para validar los datos de entrada
+const variableInutil = "hola";
 // valdiar el dni
 export function validarDni(dni: string): boolean {
     // Eliminar espacios y caracteres no numéricos
