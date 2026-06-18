@@ -11,10 +11,14 @@ function setVersion() {
 
     const newBadge = `<div class="version-badge">v${pkg.version}</div>`;
 
-    if (/class=\"version-badge\">.*?<\/div>/s.test(html)) {
-      html = html.replace(/<div class=\"version-badge\">.*?<\/div>/s, newBadge);
-    } else {
+    // Eliminar cualquier badge existente (incluso malformados) para evitar duplicados
+    html = html.replace(/<div class=\"version-badge\">[\s\S]*?<\/div>/g, '');
+
+    // Insertar la nueva badge antes del cierre de body
+    if (html.includes('</body>')) {
       html = html.replace(/<\/body>/, `${newBadge}\n</body>`);
+    } else {
+      html = html + '\n' + newBadge;
     }
 
     fs.writeFileSync(indexPath, html, 'utf8');
