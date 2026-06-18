@@ -50,6 +50,41 @@ Compilar el proyecto:
 npm run build
 ```
 
+## Requisitos
+
+- Node.js >= 20
+- npm (gestor de paquetes)
+
+## Comandos útiles
+
+- **Instalar dependencias (desarrollo):** `npm install`
+- **Instalación reproducible (CI):** `npm ci --legacy-peer-deps`
+- **Ejecutar tests:** `npm test`
+- **Lint:** `npm run lint`
+- **Bundle (esbuild):** `npm run bundle`
+- **Compilar (tsc):** `npm run build`
+
+## CI / Workflow
+
+El repositorio ya incluye un workflow de GitHub Actions en `.github/workflows/node.js.yml` que ejecuta una pipeline con los siguientes pasos principales:
+
+- `lint` (ejecuta `npm run lint`)
+- `tests` (ejecuta `npm run test`)
+- `bundle` (ejecuta `npm run bundle`)
+- `build` (ejecuta `npm run build`)
+- `deploy` (opcional con Vercel cuando se hace `push`)
+
+El workflow utiliza Node 20 y en CI se ejecuta `npm ci --legacy-peer-deps` para instalaciones reproducibles. También incluye notificaciones a Discord y un paso de deploy a Vercel que requiere secrets.
+
+Secrets/variables necesarias para el deploy:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `DISCORD_WEBHOOK` (para notificaciones)
+
+Si no querés deployar desde CI, podés comentar o eliminar el job `deploy` en el workflow.
+
 ## Uso del trabajo en CI/CD
 
 Este proyecto sirve como base para una pipeline de integracion continua porque permite:
@@ -57,13 +92,7 @@ Este proyecto sirve como base para una pipeline de integracion continua porque p
 - detectar cambios que rompen la logica de validacion
 - ejecutar pruebas automaticas en cada commit o push
 - demostrar feedback rapido antes de integrar cambios
-
-## Proximos pasos
-
-- agregar un workflow YAML para ejecutar `npm install` y `npm test`
-- El workflow ya agregado: `.github/workflows/node.js.yml` (ver abajo)
-- Descripción del workflow: ejecuta `npm ci --legacy-peer-deps`, `npm run test` y `npm run build` en Node 20 sobre `ubuntu-latest`. Se activa en `push` y `pull_request` hacia `main`.
-
+ 
 ### Workflow de GitHub Actions
 
 Archivo: `.github/workflows/node.js.yml`
@@ -79,4 +108,4 @@ Archivo: `.github/workflows/node.js.yml`
 	- `npm run build`
 
 Esto significa que cada push a `main` (o PR hacia `main`) ejecutará las pruebas automáticamente y construirá el proyecto.
-- definir una estrategia de despliegue o una version de demostracion
+ 
