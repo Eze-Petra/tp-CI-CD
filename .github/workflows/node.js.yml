@@ -77,6 +77,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+          node-version: 20
+          cache: "npm"
+    - run: npm ci --legacy-peer-deps
+    - run: node scripts/set-version.js
     - name: Deploy a Vercel
       if: ${{github.event_name == 'push'}}
       run: npx vercel --prod --yes --name=tp-ci-cd --token=${{ secrets.VERCEL_TOKEN }}
