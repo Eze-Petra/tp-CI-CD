@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint .",
+    "lint": "eslint src/**/*.ts --max-warnings 0",
     "bundle": "esbuild src/validador.ts --bundle --platform=browser --outfile=dist/validador.bundle.js --global-name=Validador"
   },
   "jest": {
