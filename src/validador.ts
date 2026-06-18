@@ -1,7 +1,7 @@
 // funciones que vamos a usar para validar los datos de entrada
 //const variableInutil = "hola";
 // valdiar el dni
-export function validarDni(dni: string): number {
+export function validarDni(dni: string): boolean {
     // Eliminar espacios y caracteres no numéricos
     const dniLimpio = dni.trim().replace(/[-.]/g, '');
     // Validar que el DNI tenga exactamente 8 dígitos con expresión regular
